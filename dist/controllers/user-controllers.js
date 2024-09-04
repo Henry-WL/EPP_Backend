@@ -101,5 +101,16 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         const error = new http_error_1.default("Invalid credentials, could not log you in.", 403);
         return next(error);
     }
+    let token;
+    try {
+        token = jsonwebtoken_1.default.sign({ userId: existingUser.id, email: existingUser.email }, process.env.JWT_KEY, { expiresIn: "1h" });
+    }
+    catch (err) {
+        const error = new http_error_1.default("Signing up failed, please try again", 500);
+        return next(error);
+    }
+    res
+        .status(201)
+        .json({ userId: existingUser.id, email: existingUser.email, token: token });
 });
 exports.login = login;
