@@ -4,6 +4,7 @@ import todoRoutes from './routes/todos'
 import userRoutes from './routes/user-routes';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
+import cors from 'cors'
 dotenv.config()
 
 const app = express()
@@ -12,6 +13,7 @@ app.use(json())
 
 // bodyparser
 // cors
+app.use(cors())
 
 app.use('/todos', todoRoutes)
 app.use('/user', userRoutes)
