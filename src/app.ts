@@ -2,6 +2,7 @@ import express, {NextFunction, Request, Response} from 'express'
 import {json} from 'body-parser'
 import todoRoutes from './routes/todos'
 import userRoutes from './routes/user-routes';
+import eventRoutes from './routes/event-routes';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import cors from 'cors'
@@ -17,6 +18,7 @@ app.use(cors())
 
 app.use('/todos', todoRoutes)
 app.use('/user', userRoutes)
+app.use('/events', eventRoutes)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({message: err.message})
