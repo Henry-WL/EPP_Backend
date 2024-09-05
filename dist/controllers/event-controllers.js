@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createEvent = exports.getAllEvents = void 0;
+exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
 const event_1 = __importDefault(require("../models/event"));
 const http_error_1 = __importDefault(require("../middleware/http-error"));
 const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -21,6 +21,14 @@ const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     res.status(200).json({ allEvents });
 });
 exports.getAllEvents = getAllEvents;
+const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { eventId } = req.params;
+    const singleEvent = yield event_1.default.findOne({ _id: eventId });
+    // existingUser = await User.findOne({ email: email });
+    console.log(singleEvent);
+    res.status(200).json({ event: singleEvent });
+});
+exports.getSingleEvent = getSingleEvent;
 const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     // const name = (req.body as { text: string }).text;
     // const location = (req.body as { text: string }).text;

@@ -15,6 +15,17 @@ export const getAllEvents: RequestHandler = async (req, res, next) => {
     res.status(200).json({allEvents})
 }
 
+export const getSingleEvent: RequestHandler = async(req, res, next) => {
+    const {eventId} = req.params
+    const singleEvent = await Event.findOne({_id: eventId})
+    // existingUser = await User.findOne({ email: email });
+
+    console.log(singleEvent)
+
+    res.status(200).json({event: singleEvent})
+
+}
+
 export const createEvent: RequestHandler = async (req, res, next) => {
     // const name = (req.body as { text: string }).text;
     // const location = (req.body as { text: string }).text;
