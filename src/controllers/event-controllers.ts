@@ -66,3 +66,7 @@ export const joinEvent: RequestHandler = async (req, res, next) => {
 
   res.status(200).json({foundEvent})
 };
+
+export const leaveEvent: RequestHandler = async (req, res, next) => {
+    console.log('leave event')
+}

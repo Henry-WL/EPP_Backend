@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.joinEvent = exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
+exports.leaveEvent = exports.joinEvent = exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
 const event_1 = __importDefault(require("../models/event"));
 const http_error_1 = __importDefault(require("../middleware/http-error"));
 const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -59,3 +59,7 @@ const joinEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     res.status(200).json({ foundEvent });
 });
 exports.joinEvent = joinEvent;
+const leaveEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('leave event');
+});
+exports.leaveEvent = leaveEvent;
