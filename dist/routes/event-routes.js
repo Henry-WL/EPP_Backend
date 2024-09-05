@@ -4,4 +4,5 @@ const express_1 = require("express");
 const event_controllers_1 = require("../controllers/event-controllers");
 const router = (0, express_1.Router)();
 router.get('/', event_controllers_1.getAllEvents);
+router.post('/', event_controllers_1.createEvent);
 exports.default = router;

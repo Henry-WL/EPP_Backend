@@ -14,3 +14,24 @@ export const getAllEvents: RequestHandler = async (req, res, next) => {
 
     res.status(200).json({allEvents})
 }
+
+export const createEvent: RequestHandler = async (req, res, next) => {
+    // const name = (req.body as { text: string }).text;
+    // const location = (req.body as { text: string }).text;
+
+    const {name, location} = req.body
+
+    const createdEvent = new Event({
+        name,
+        location,
+      });
+    
+      try {
+        await createdEvent.save();
+      } catch (err) {
+        const error = new HttpError("Created event failed, please try again.", 500);
+        return next(error);
+      }
+
+      res.status(201).json({createEvent})
+}
