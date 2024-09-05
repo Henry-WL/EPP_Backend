@@ -6,4 +6,5 @@ const router = (0, express_1.Router)();
 router.get("/", event_controllers_1.getAllEvents);
 router.get("/:eventId", event_controllers_1.getSingleEvent);
 router.post("/", event_controllers_1.createEvent);
+router.post("/join/:eventId", event_controllers_1.joinEvent);
 exports.default = router;

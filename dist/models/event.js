@@ -8,7 +8,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const eventSchema = new Schema({
     name: { type: String },
-    location: { type: String }
+    location: { type: String },
+    attendees: [{ userId: String, username: String }]
 });
 const Event = mongoose_1.default.model("Event", eventSchema);
 exports.default = Event;

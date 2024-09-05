@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 
 const eventSchema = new Schema({
     name: {type: String},
-    location: {type: String}
+    location: {type: String},
+    attendees: [{userId: String, username: String}]
 })
 
 

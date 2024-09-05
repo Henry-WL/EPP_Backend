@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
+exports.joinEvent = exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
 const event_1 = __importDefault(require("../models/event"));
 const http_error_1 = __importDefault(require("../middleware/http-error"));
 const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -47,3 +47,15 @@ const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     res.status(201).json({ createEvent: exports.createEvent });
 });
 exports.createEvent = createEvent;
+const joinEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("join event clg");
+    const { eventId } = req.params;
+    const { userId, username } = req.body;
+    console.log(eventId, userId);
+    const foundEvent = yield event_1.default.findById(eventId);
+    console.log(foundEvent);
+    foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.attendees.push({ userId, username });
+    foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.save();
+    res.status(200).json({ foundEvent });
+});
+exports.joinEvent = joinEvent;
