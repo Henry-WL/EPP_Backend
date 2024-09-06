@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 
-import Event, {EventDocument} from "../models/event";
+import Event, { EventDocument } from "../models/event";
 import HttpError from "../middleware/http-error";
 
 // const HttpError = require("../middleware/http-error")
@@ -11,21 +11,34 @@ export const getAllEvents: RequestHandler = async (req, res, next) => {
     res.status(200).json({ allEvents });
   } catch (err) {
     const error = new HttpError(
-      "Getting events failed, please try again.",
+      "Getting all events failed, please try again.",
       500
     );
     return next(error);
   }
 };
 
-export const getSingleEvent: RequestHandler = async (req, res, next) => {
+interface EventParams {
+    eventId: string
+}
+
+export const getSingleEvent: RequestHandler<EventParams> = async (req, res, next) => {
   const { eventId } = req.params;
-  const singleEvent = await Event.findOne({ _id: eventId });
-  // existingUser = await User.findOne({ email: email });
+  try {
+    const singleEvent:EventDocument | null = await Event.findOne({ _id: eventId });
 
-  console.log(singleEvent);
-
-  res.status(200).json({ event: singleEvent });
+    if (!singleEvent) {
+        const error = new HttpError("Event could not be found, 404")
+        return next(error)
+    }
+    res.status(200).json({ event: singleEvent });
+  } catch (err) {
+    const error = new HttpError(
+      "Getting single event failed, please try again",
+      500
+    );
+    return next(error);
+  }
 };
 
 export const createEvent: RequestHandler = async (req, res, next) => {

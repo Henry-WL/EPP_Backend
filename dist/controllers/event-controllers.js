@@ -22,17 +22,25 @@ const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         res.status(200).json({ allEvents });
     }
     catch (err) {
-        const error = new http_error_1.default("Getting events failed, please try again.", 500);
+        const error = new http_error_1.default("Getting all events failed, please try again.", 500);
         return next(error);
     }
 });
 exports.getAllEvents = getAllEvents;
 const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { eventId } = req.params;
-    const singleEvent = yield event_1.default.findOne({ _id: eventId });
-    // existingUser = await User.findOne({ email: email });
-    console.log(singleEvent);
-    res.status(200).json({ event: singleEvent });
+    try {
+        const singleEvent = yield event_1.default.findOne({ _id: eventId });
+        if (!singleEvent) {
+            const error = new http_error_1.default("Event could not be found, 404");
+            return next(error);
+        }
+        res.status(200).json({ event: singleEvent });
+    }
+    catch (err) {
+        const error = new http_error_1.default("Getting single event failed, please try again", 500);
+        return next(error);
+    }
 });
 exports.getSingleEvent = getSingleEvent;
 const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
