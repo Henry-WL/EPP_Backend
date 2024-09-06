@@ -2,6 +2,7 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 
 import Event, { EventDocument } from "../models/event";
 import HttpError from "../middleware/http-error";
+import { CreateEventBody, EventParams, JoinLeaveEvent } from "./types/eventTypes";
 
 // const HttpError = require("../middleware/http-error")
 
@@ -19,7 +20,7 @@ export const getAllEvents: RequestHandler = async (req, res, next) => {
 };
 
 
-export const getSingleEvent: RequestHandler<{eventId: string}> = async (req, res, next) => {
+export const getSingleEvent: RequestHandler<EventParams> = async (req, res, next) => {
   const { eventId } = req.params;
   try {
     const singleEvent:EventDocument | null = await Event.findOne({ _id: eventId });
@@ -38,12 +39,6 @@ export const getSingleEvent: RequestHandler<{eventId: string}> = async (req, res
   }
 };
 
-interface CreateEventBody {
-    name: string;
-    location: string;
-}
-
-
 export const createEvent: RequestHandler<{},{},CreateEventBody> = async (req, res, next) => {
   const { name, location } = req.body;
 
@@ -60,26 +55,30 @@ export const createEvent: RequestHandler<{},{},CreateEventBody> = async (req, re
     const error = new HttpError("Created event failed, please try again.", 500);
     return next(error);
   }
-
 };
 
-export const joinEvent: RequestHandler = async (req, res, next) => {
-  console.log("join event clg");
-
+export const joinEvent: RequestHandler<EventParams, {}, JoinLeaveEvent> = async (req, res, next) => {
   const { eventId } = req.params;
   const { userId, username } = req.body;
 
-  console.log(eventId, userId);
+    try {
+        const foundEvent = await Event.findById(eventId);
 
-  const foundEvent = await Event.findById(eventId);
+        if (!foundEvent) {
+            const error = new HttpError("Event not found", 404)
+            return next(error)
+        }
 
-  console.log(foundEvent);
+        foundEvent.attendees.push({ userId, username });
 
-  foundEvent?.attendees.push({ userId, username });
+        await foundEvent.save();
+      
+        res.status(200).json({ foundEvent });
+    } catch(err) {
+        const error = new HttpError("Joining event failed, please try again", 500)
+        return next(error)
+    }
 
-  foundEvent?.save();
-
-  res.status(200).json({ foundEvent });
 };
 
 export const leaveEvent: RequestHandler = async (req, res, next) => {

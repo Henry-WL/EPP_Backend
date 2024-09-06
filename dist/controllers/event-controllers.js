@@ -60,15 +60,22 @@ const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.createEvent = createEvent;
 const joinEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("join event clg");
     const { eventId } = req.params;
     const { userId, username } = req.body;
-    console.log(eventId, userId);
-    const foundEvent = yield event_1.default.findById(eventId);
-    console.log(foundEvent);
-    foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.attendees.push({ userId, username });
-    foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.save();
-    res.status(200).json({ foundEvent });
+    try {
+        const foundEvent = yield event_1.default.findById(eventId);
+        if (!foundEvent) {
+            const error = new http_error_1.default("Event not found", 404);
+            return next(error);
+        }
+        foundEvent.attendees.push({ userId, username });
+        yield foundEvent.save();
+        res.status(200).json({ foundEvent });
+    }
+    catch (err) {
+        const error = new http_error_1.default("Joining event failed, please try again", 500);
+        return next(error);
+    }
 });
 exports.joinEvent = joinEvent;
 const leaveEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

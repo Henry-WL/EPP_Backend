@@ -2,10 +2,15 @@ import mongoose from "mongoose";
 import { Document, Schema, model } from "mongoose";
 // import uniqueValidator from 'mongoose-unique-validator';
 
+interface Attendee {
+    userId: string;
+    username: string;
+}
+
 export interface EventDocument extends Document {
     name: string,
     location: string,
-    attendees: []
+    attendees: Attendee[]
 }
 
 // const Schema = mongoose.Schema;
