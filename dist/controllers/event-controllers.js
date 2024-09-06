@@ -32,7 +32,7 @@ const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     try {
         const singleEvent = yield event_1.default.findOne({ _id: eventId });
         if (!singleEvent) {
-            const error = new http_error_1.default("Event could not be found, 404");
+            const error = new http_error_1.default("Event could not be found", 404);
             return next(error);
         }
         res.status(200).json({ event: singleEvent });
@@ -44,21 +44,19 @@ const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.getSingleEvent = getSingleEvent;
 const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    // const name = (req.body as { text: string }).text;
-    // const location = (req.body as { text: string }).text;
     const { name, location } = req.body;
-    const createdEvent = new event_1.default({
-        name,
-        location,
-    });
     try {
-        yield createdEvent.save();
+        const newEvent = new event_1.default({
+            name,
+            location,
+        });
+        yield newEvent.save();
+        res.status(201).json({ newEvent });
     }
     catch (err) {
         const error = new http_error_1.default("Created event failed, please try again.", 500);
         return next(error);
     }
-    res.status(201).json({ createEvent: exports.createEvent });
 });
 exports.createEvent = createEvent;
 const joinEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

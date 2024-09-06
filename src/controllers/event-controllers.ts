@@ -18,17 +18,14 @@ export const getAllEvents: RequestHandler = async (req, res, next) => {
   }
 };
 
-interface EventParams {
-    eventId: string
-}
 
-export const getSingleEvent: RequestHandler<EventParams> = async (req, res, next) => {
+export const getSingleEvent: RequestHandler<{eventId: string}> = async (req, res, next) => {
   const { eventId } = req.params;
   try {
     const singleEvent:EventDocument | null = await Event.findOne({ _id: eventId });
 
     if (!singleEvent) {
-        const error = new HttpError("Event could not be found, 404")
+        const error = new HttpError("Event could not be found", 404)
         return next(error)
     }
     res.status(200).json({ event: singleEvent });
@@ -41,25 +38,31 @@ export const getSingleEvent: RequestHandler<EventParams> = async (req, res, next
   }
 };
 
-export const createEvent: RequestHandler = async (req, res, next) => {
-  // const name = (req.body as { text: string }).text;
-  // const location = (req.body as { text: string }).text;
+interface CreateEventBody {
+    name: string;
+    location: string;
+}
 
+
+export const createEvent: RequestHandler<{},{},CreateEventBody> = async (req, res, next) => {
   const { name, location } = req.body;
 
-  const createdEvent = new Event({
-    name,
-    location,
-  });
-
   try {
-    await createdEvent.save();
-  } catch (err) {
+    const newEvent = new Event({
+        name,
+        location,
+      });
+
+      await newEvent.save();
+
+      res.status(201).json({ newEvent });
+  } catch(err) {
     const error = new HttpError("Created event failed, please try again.", 500);
     return next(error);
   }
 
-  res.status(201).json({ createEvent });
+
+
 };
 
 export const joinEvent: RequestHandler = async (req, res, next) => {
