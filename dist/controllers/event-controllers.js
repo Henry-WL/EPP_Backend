@@ -79,19 +79,22 @@ const joinEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 });
 exports.joinEvent = joinEvent;
 const leaveEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("leave event");
     const { eventId } = req.params;
     const { userId } = req.body;
-    console.log(eventId, userId);
-    const foundEvent = yield event_1.default.findById(eventId);
-    console.log(foundEvent, "found event");
-    const filteredEventAttendees = foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.attendees.filter((attendee) => attendee.userId !== userId);
-    console.log(filteredEventAttendees, "filteredevent");
-    foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.attendees = filteredEventAttendees;
-    console.log(foundEvent, "foundev");
-    foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.save();
-    res.status(200).json({ foundEvent });
-    //   foundEvent?.attendees.push({userId, username})
-    //   foundEvent?.save()
+    try {
+        const foundEvent = yield event_1.default.findById(eventId);
+        if (!foundEvent) {
+            const error = new http_error_1.default("Event not found", 404);
+            return next(error);
+        }
+        const filteredEventAttendees = foundEvent.attendees.filter((attendee) => attendee.userId !== userId);
+        foundEvent.attendees = filteredEventAttendees;
+        foundEvent.save();
+        res.status(200).json({ foundEvent });
+    }
+    catch (_a) {
+        const error = new http_error_1.default("Leaving event failed, please try again", 500);
+        return next(error);
+    }
 });
 exports.leaveEvent = leaveEvent;

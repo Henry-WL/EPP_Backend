@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 
 import Event, { EventDocument } from "../models/event";
 import HttpError from "../middleware/http-error";
-import { CreateEventBody, EventParams, JoinLeaveEvent } from "./types/eventTypes";
+import { CreateEventBody, EventParams, JoinEvent, LeaveEvent } from "./types/eventTypes";
 
 // const HttpError = require("../middleware/http-error")
 
@@ -57,7 +57,7 @@ export const createEvent: RequestHandler<{},{},CreateEventBody> = async (req, re
   }
 };
 
-export const joinEvent: RequestHandler<EventParams, {}, JoinLeaveEvent> = async (req, res, next) => {
+export const joinEvent: RequestHandler<EventParams, {}, JoinEvent> = async (req, res, next) => {
   const { eventId } = req.params;
   const { userId, username } = req.body;
 
@@ -81,33 +81,30 @@ export const joinEvent: RequestHandler<EventParams, {}, JoinLeaveEvent> = async 
 
 };
 
-export const leaveEvent: RequestHandler = async (req, res, next) => {
-  console.log("leave event");
-
+export const leaveEvent: RequestHandler<EventParams, {}, LeaveEvent> = async (req, res, next) => {
   const { eventId } = req.params;
   const { userId } = req.body;
+  
 
-  console.log(eventId, userId);
+try {
+    const foundEvent = await Event.findById(eventId);
 
-  const foundEvent = await Event.findById(eventId);
-
-  console.log(foundEvent, "found event");
-
-  const filteredEventAttendees = foundEvent?.attendees.filter(
-    (attendee) => attendee.userId !== userId
-  );
-
-  console.log(filteredEventAttendees, "filteredevent");
-
-  foundEvent?.attendees = filteredEventAttendees;
-
-  console.log(foundEvent, "foundev");
-
-  foundEvent?.save();
-
-  res.status(200).json({ foundEvent });
-
-  //   foundEvent?.attendees.push({userId, username})
-
-  //   foundEvent?.save()
+    if (!foundEvent) {
+        const error = new HttpError("Event not found", 404)
+        return next(error)
+    }
+    
+    const filteredEventAttendees = foundEvent.attendees.filter(
+      (attendee) => attendee.userId !== userId
+    );
+    
+    foundEvent.attendees = filteredEventAttendees;
+    
+    foundEvent.save();
+    
+    res.status(200).json({ foundEvent });
+} catch {
+    const error = new HttpError("Leaving event failed, please try again", 500)
+    return next(error)
+}
 };

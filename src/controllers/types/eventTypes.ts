@@ -8,10 +8,14 @@ export interface CreateEventBody {
 //   date: string;
 }
 
-export interface JoinLeaveEvent {
+export interface JoinEvent {
     // const { userId, username } = req.body;
     userId: string;
     username: string
+}
+
+export interface LeaveEvent {
+    userId: string;
 }
 
 // export interface UpdateEventBody {
