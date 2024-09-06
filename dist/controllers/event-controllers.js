@@ -15,10 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.leaveEvent = exports.joinEvent = exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
 const event_1 = __importDefault(require("../models/event"));
 const http_error_1 = __importDefault(require("../middleware/http-error"));
+// const HttpError = require("../middleware/http-error")
 const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const allEvents = yield event_1.default.find({});
-    console.log(allEvents);
-    res.status(200).json({ allEvents });
+    try {
+        const allEvents = yield event_1.default.find({});
+        res.status(200).json({ allEvents });
+    }
+    catch (err) {
+        const error = new http_error_1.default("Getting events failed, please try again.", 500);
+        return next(error);
+    }
 });
 exports.getAllEvents = getAllEvents;
 const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,16 +66,16 @@ const joinEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 });
 exports.joinEvent = joinEvent;
 const leaveEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('leave event');
+    console.log("leave event");
     const { eventId } = req.params;
     const { userId } = req.body;
     console.log(eventId, userId);
     const foundEvent = yield event_1.default.findById(eventId);
-    console.log(foundEvent, 'found event');
+    console.log(foundEvent, "found event");
     const filteredEventAttendees = foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.attendees.filter((attendee) => attendee.userId !== userId);
-    console.log(filteredEventAttendees, 'filteredevent');
+    console.log(filteredEventAttendees, "filteredevent");
     foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.attendees = filteredEventAttendees;
-    console.log(foundEvent, 'foundev');
+    console.log(foundEvent, "foundev");
     foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.save();
     res.status(200).json({ foundEvent });
     //   foundEvent?.attendees.push({userId, username})

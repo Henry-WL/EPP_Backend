@@ -1,18 +1,21 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 
-import Event from "../models/event";
+import Event, {EventDocument} from "../models/event";
 import HttpError from "../middleware/http-error";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 // const HttpError = require("../middleware/http-error")
-import mongoose from "mongoose";
 
 export const getAllEvents: RequestHandler = async (req, res, next) => {
-  const allEvents = await Event.find({});
-  console.log(allEvents);
-
-  res.status(200).json({ allEvents });
+  try {
+    const allEvents: EventDocument[] = await Event.find({});
+    res.status(200).json({ allEvents });
+  } catch (err) {
+    const error = new HttpError(
+      "Getting events failed, please try again.",
+      500
+    );
+    return next(error);
+  }
 };
 
 export const getSingleEvent: RequestHandler = async (req, res, next) => {
@@ -54,46 +57,44 @@ export const joinEvent: RequestHandler = async (req, res, next) => {
 
   console.log(eventId, userId);
 
-  const foundEvent = await Event.findById(eventId)
+  const foundEvent = await Event.findById(eventId);
 
-  console.log(foundEvent)
+  console.log(foundEvent);
 
-  
+  foundEvent?.attendees.push({ userId, username });
 
-  foundEvent?.attendees.push({userId, username})
+  foundEvent?.save();
 
-  foundEvent?.save()
-
-  res.status(200).json({foundEvent})
+  res.status(200).json({ foundEvent });
 };
 
 export const leaveEvent: RequestHandler = async (req, res, next) => {
-    console.log('leave event')
+  console.log("leave event");
 
-    const { eventId } = req.params;
+  const { eventId } = req.params;
   const { userId } = req.body;
 
   console.log(eventId, userId);
 
-  const foundEvent = await Event.findById(eventId)
+  const foundEvent = await Event.findById(eventId);
 
-  console.log(foundEvent, 'found event')
+  console.log(foundEvent, "found event");
 
-  const filteredEventAttendees = foundEvent?.attendees.filter((attendee) => attendee.userId !== userId)
+  const filteredEventAttendees = foundEvent?.attendees.filter(
+    (attendee) => attendee.userId !== userId
+  );
 
-  console.log(filteredEventAttendees, 'filteredevent')
+  console.log(filteredEventAttendees, "filteredevent");
 
-  foundEvent?.attendees = filteredEventAttendees
+  foundEvent?.attendees = filteredEventAttendees;
 
-  console.log(foundEvent, 'foundev')
+  console.log(foundEvent, "foundev");
 
-  foundEvent?.save()
+  foundEvent?.save();
 
+  res.status(200).json({ foundEvent });
 
-    res.status(200).json({foundEvent})
+  //   foundEvent?.attendees.push({userId, username})
 
-//   foundEvent?.attendees.push({userId, username})
-
-//   foundEvent?.save()
-
-}
+  //   foundEvent?.save()
+};
