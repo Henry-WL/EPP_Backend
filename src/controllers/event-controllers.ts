@@ -61,8 +61,6 @@ export const createEvent: RequestHandler<{},{},CreateEventBody> = async (req, re
     return next(error);
   }
 
-
-
 };
 
 export const joinEvent: RequestHandler = async (req, res, next) => {
