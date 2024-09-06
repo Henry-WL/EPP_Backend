@@ -69,4 +69,31 @@ export const joinEvent: RequestHandler = async (req, res, next) => {
 
 export const leaveEvent: RequestHandler = async (req, res, next) => {
     console.log('leave event')
+
+    const { eventId } = req.params;
+  const { userId } = req.body;
+
+  console.log(eventId, userId);
+
+  const foundEvent = await Event.findById(eventId)
+
+  console.log(foundEvent, 'found event')
+
+  const filteredEventAttendees = foundEvent?.attendees.filter((attendee) => attendee.userId !== userId)
+
+  console.log(filteredEventAttendees, 'filteredevent')
+
+  foundEvent?.attendees = filteredEventAttendees
+
+  console.log(foundEvent, 'foundev')
+
+  foundEvent?.save()
+
+
+    res.status(200).json({foundEvent})
+
+//   foundEvent?.attendees.push({userId, username})
+
+//   foundEvent?.save()
+
 }

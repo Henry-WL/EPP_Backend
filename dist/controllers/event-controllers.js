@@ -61,5 +61,18 @@ const joinEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 exports.joinEvent = joinEvent;
 const leaveEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('leave event');
+    const { eventId } = req.params;
+    const { userId } = req.body;
+    console.log(eventId, userId);
+    const foundEvent = yield event_1.default.findById(eventId);
+    console.log(foundEvent, 'found event');
+    const filteredEventAttendees = foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.attendees.filter((attendee) => attendee.userId !== userId);
+    console.log(filteredEventAttendees, 'filteredevent');
+    foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.attendees = filteredEventAttendees;
+    console.log(foundEvent, 'foundev');
+    foundEvent === null || foundEvent === void 0 ? void 0 : foundEvent.save();
+    res.status(200).json({ foundEvent });
+    //   foundEvent?.attendees.push({userId, username})
+    //   foundEvent?.save()
 });
 exports.leaveEvent = leaveEvent;
