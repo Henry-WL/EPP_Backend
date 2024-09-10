@@ -40,12 +40,17 @@ export const getSingleEvent: RequestHandler<EventParams> = async (req, res, next
 };
 
 export const createEvent: RequestHandler<{},{},CreateEventBody> = async (req, res, next) => {
-  const { name, location } = req.body;
+    console.log(req.body)
+  const { name, location, description, startDate, endDate } = req.body;
 
   try {
     const newEvent = new Event({
         name,
         location,
+        description,
+        startDate,
+        endDate
+
       });
 
       await newEvent.save();

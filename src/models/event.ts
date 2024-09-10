@@ -10,15 +10,28 @@ interface Attendee {
 export interface EventDocument extends Document {
     name: string,
     location: string,
-    attendees: Attendee[]
+    attendees: Attendee[],
+    description: string,
+    startDate: string,
+    endDate: string
 }
+
+// id: string;
+// name: string;
+// location: string;
+// description: string;
+// startDate: string; 
+// endDate: string;  
 
 // const Schema = mongoose.Schema;
 
 const eventSchema = new Schema<EventDocument>({
     name: {type: String},
     location: {type: String},
-    attendees: [{userId: String, username: String}]
+    attendees: [{userId: String, username: String}],
+    description: {type: String},
+    startDate: {type: String},
+    endDate: {type: String}
 })
 
 

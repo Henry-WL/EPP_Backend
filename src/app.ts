@@ -17,8 +17,8 @@ app.use(json())
 app.use(cors())
 
 app.use('/todos', todoRoutes)
-app.use('/user', userRoutes)
-app.use('/events', eventRoutes)
+app.use('/api/user', userRoutes)
+app.use('/api/events', eventRoutes)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({message: err.message})

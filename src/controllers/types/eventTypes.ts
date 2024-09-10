@@ -5,6 +5,9 @@ export interface EventParams {
 export interface CreateEventBody {
   name: string;
   location: string;
+  description: string;
+  startDate: string;
+  endDate: string;
 //   date: string;
 }
 
