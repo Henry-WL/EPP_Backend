@@ -53,6 +53,7 @@ const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
     const createdUser = new user_1.default({
         email: email,
         password: hashedPass,
+        isStaff: false
     });
     try {
         yield createdUser.save();
@@ -111,6 +112,6 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     }
     res
         .status(201)
-        .json({ userId: existingUser.id, email: existingUser.email, token: token });
+        .json({ userId: existingUser.id, email: existingUser.email, token: token, isStaff: existingUser.isStaff });
 });
 exports.login = login;

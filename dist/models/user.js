@@ -8,7 +8,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const userSchema = new Schema({
     email: { type: String },
-    password: { type: String }
+    password: { type: String },
+    isStaff: { type: String },
 });
 // userSchema.plugin(uniqueValidator)
 const User = mongoose_1.default.model("User", userSchema);

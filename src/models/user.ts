@@ -3,9 +3,17 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+export interface EventDocument extends Document {
+    email: string;
+    password: string;
+    isStaff: string;
+}
+
 const userSchema = new Schema({
     email: {type: String},
-    password: {type: String}
+    password: {type: String},
+    isStaff: {type: String},
+
 })
 
 // userSchema.plugin(uniqueValidator)

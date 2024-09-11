@@ -49,6 +49,7 @@ export const signup: RequestHandler = async (req, res, next) => {
   const createdUser = new User({
     email: email,
     password: hashedPass,
+    isStaff: false
   });
 
   try {
@@ -132,5 +133,5 @@ export const login: RequestHandler = async (req, res, next) => {
 
   res
     .status(201)
-    .json({ userId: existingUser.id, email: existingUser.email, token: token }); 
+    .json({ userId: existingUser.id, email: existingUser.email, token: token, isStaff: existingUser.isStaff }); 
 };
