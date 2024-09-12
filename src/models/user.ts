@@ -6,13 +6,13 @@ const Schema = mongoose.Schema;
 export interface EventDocument extends Document {
     email: string;
     password: string;
-    isStaff: string;
+    isStaff: boolean;
 }
 
 const userSchema = new Schema({
     email: {type: String},
     password: {type: String},
-    isStaff: {type: String},
+    isStaff: {type: Boolean},
 
 })
 
