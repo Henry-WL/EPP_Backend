@@ -12,7 +12,7 @@ export interface EventDocument extends Document {
 const userSchema = new Schema({
     email: {type: String},
     password: {type: String},
-    isStaff: {type: Boolean},
+    isStaff: {type: Boolean, default: false},
 
 })
 

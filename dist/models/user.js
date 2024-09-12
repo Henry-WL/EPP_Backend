@@ -9,7 +9,7 @@ const Schema = mongoose_1.default.Schema;
 const userSchema = new Schema({
     email: { type: String },
     password: { type: String },
-    isStaff: { type: Boolean },
+    isStaff: { type: Boolean, default: false },
 });
 // userSchema.plugin(uniqueValidator)
 const User = mongoose_1.default.model("User", userSchema);
