@@ -12,6 +12,7 @@ const eventSchema = new mongoose_1.Schema({
     name: { type: String },
     location: { type: String },
     attendees: [{ userId: String, username: String }],
+    tags: [{ type: String }],
     description: { type: String },
     startDate: { type: String },
     endDate: { type: String }

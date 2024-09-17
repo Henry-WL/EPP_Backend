@@ -7,10 +7,15 @@ interface Attendee {
     username: string;
 }
 
+interface Tag {
+    tagName: string
+}
+
 export interface EventDocument extends Document {
     name: string,
     location: string,
     attendees: Attendee[],
+    tags: Tag[],
     description: string,
     startDate: string,
     endDate: string
@@ -29,6 +34,7 @@ const eventSchema = new Schema<EventDocument>({
     name: {type: String},
     location: {type: String},
     attendees: [{userId: String, username: String}],
+    tags: [{type: String}],
     description: {type: String},
     startDate: {type: String},
     endDate: {type: String}
