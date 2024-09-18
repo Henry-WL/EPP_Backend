@@ -3,6 +3,7 @@ import {
   createEvent,
   getAllEvents,
   getSingleEvent,
+  getUserEvents,
   joinEvent,
   leaveEvent,
 } from "../controllers/event-controllers";
@@ -18,5 +19,7 @@ router.post("/", createEvent);
 router.post("/join/:eventId", joinEvent)
 
 router.post("/leave/:eventId", leaveEvent)
+
+router.get("/userEvents/:userId", getUserEvents)
 
 export default router;

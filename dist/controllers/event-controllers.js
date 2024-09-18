@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.leaveEvent = exports.joinEvent = exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
+exports.getUserEvents = exports.leaveEvent = exports.joinEvent = exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
 const event_1 = __importDefault(require("../models/event"));
 const http_error_1 = __importDefault(require("../middleware/http-error"));
 // const HttpError = require("../middleware/http-error")
@@ -30,7 +30,9 @@ exports.getAllEvents = getAllEvents;
 const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { eventId } = req.params;
     try {
-        const singleEvent = yield event_1.default.findOne({ _id: eventId });
+        const singleEvent = yield event_1.default.findOne({
+            _id: eventId,
+        });
         if (!singleEvent) {
             const error = new http_error_1.default("Event could not be found", 404);
             return next(error);
@@ -52,7 +54,7 @@ const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             location,
             description,
             startDate,
-            endDate
+            endDate,
         });
         yield newEvent.save();
         res.status(201).json({ newEvent });
@@ -87,6 +89,7 @@ const leaveEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     const { userId } = req.body;
     try {
         const foundEvent = yield event_1.default.findById(eventId);
+        console.log(foundEvent);
         if (!foundEvent) {
             const error = new http_error_1.default("Event not found", 404);
             return next(error);
@@ -102,3 +105,24 @@ const leaveEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.leaveEvent = leaveEvent;
+const getUserEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    try {
+        const foundUserEvents = yield event_1.default.find({
+            attendees: { $elemMatch: { userId } },
+        });
+        console.log(foundUserEvents);
+        if (foundUserEvents.length < 0) {
+            const error = new http_error_1.default("No events found for this user", 404);
+            return next(error);
+        }
+        else {
+            return res.status(200).json({ foundUserEvents });
+        }
+    }
+    catch (err) {
+        const error = new http_error_1.default("Error getting user events", 500);
+        return next(error);
+    }
+});
+exports.getUserEvents = getUserEvents;

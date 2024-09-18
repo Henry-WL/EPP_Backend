@@ -21,6 +21,10 @@ export interface LeaveEvent {
     userId: string;
 }
 
+export interface UserParams {
+    userId: string;
+}
+
 // export interface UpdateEventBody {
 //   name?: string; // Optional fields, since in update requests, all fields might not be provided
 //   location?: string;

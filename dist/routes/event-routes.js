@@ -8,4 +8,5 @@ router.get("/:eventId", event_controllers_1.getSingleEvent);
 router.post("/", event_controllers_1.createEvent);
 router.post("/join/:eventId", event_controllers_1.joinEvent);
 router.post("/leave/:eventId", event_controllers_1.leaveEvent);
+router.get("/userEvents/:userId", event_controllers_1.getUserEvents);
 exports.default = router;
