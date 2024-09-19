@@ -110,7 +110,7 @@ const getUserEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     try {
         const foundUserEvents = yield event_1.default.find({
             attendees: { $elemMatch: { userId } },
-        });
+        }).sort('-startDate');
         console.log(foundUserEvents);
         if (foundUserEvents.length < 0) {
             const error = new http_error_1.default("No events found for this user", 404);

@@ -146,7 +146,7 @@ export const getUserEvents: RequestHandler<UserParams> = async (
   try {
     const foundUserEvents = await Event.find({
       attendees: { $elemMatch: { userId } },
-    });
+    }).sort('-startDate');
 
     console.log(foundUserEvents);
 
