@@ -3,6 +3,7 @@ import {json} from 'body-parser'
 import todoRoutes from './routes/todos'
 import userRoutes from './routes/user-routes';
 import eventRoutes from './routes/event-routes';
+import paymentRoutes from './routes/paymentRoutes'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import cors from 'cors'
@@ -19,6 +20,8 @@ app.use(cors())
 app.use('/todos', todoRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/events', eventRoutes)
+
+app.use('/api/payment', paymentRoutes)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     res.status(500).json({message: err.message})

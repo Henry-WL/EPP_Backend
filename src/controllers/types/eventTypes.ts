@@ -8,6 +8,9 @@ export interface CreateEventBody {
   description: string;
   startDate: string;
   endDate: string;
+  ticketPrice: number,
+  tags: string[]
+//   tags: [{ type: String }],
 //   date: string;
 }
 

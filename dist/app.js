@@ -8,6 +8,7 @@ const body_parser_1 = require("body-parser");
 const todos_1 = __importDefault(require("./routes/todos"));
 const user_routes_1 = __importDefault(require("./routes/user-routes"));
 const event_routes_1 = __importDefault(require("./routes/event-routes"));
+const paymentRoutes_1 = __importDefault(require("./routes/paymentRoutes"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
@@ -20,6 +21,7 @@ app.use((0, cors_1.default)());
 app.use('/todos', todos_1.default);
 app.use('/api/user', user_routes_1.default);
 app.use('/api/events', event_routes_1.default);
+app.use('/api/payment', paymentRoutes_1.default);
 app.use((err, req, res, next) => {
     res.status(500).json({ message: err.message });
 });

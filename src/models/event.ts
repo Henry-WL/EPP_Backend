@@ -19,6 +19,7 @@ export interface EventDocument extends Document {
   description: string;
   startDate: string;
   endDate: string;
+  ticketPrice: number;
 }
 
 // id: string;
@@ -44,6 +45,7 @@ const eventSchema = new Schema<EventDocument>({
   description: { type: String },
   startDate: { type: String },
   endDate: { type: String },
+  ticketPrice: {type: Number, default: 0}
 });
 
 const Event = model<EventDocument>("Event", eventSchema);

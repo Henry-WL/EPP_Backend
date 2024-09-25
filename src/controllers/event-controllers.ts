@@ -56,7 +56,7 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
   next
 ) => {
   console.log(req.body);
-  const { name, location, description, startDate, endDate } = req.body;
+  const { name, location, description, startDate, endDate, ticketPrice, tagsArr } = req.body;
 
   try {
     const newEvent = new Event({
@@ -65,7 +65,11 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
       description,
       startDate,
       endDate,
+      ticketPrice,
+      tags:tagsArr
     });
+
+    console.log(newEvent, 'newEvent')
 
     await newEvent.save();
 
