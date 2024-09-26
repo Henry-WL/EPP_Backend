@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserEvents = exports.leaveEvent = exports.joinEvent = exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
+exports.deleteEvent = exports.getUserEvents = exports.leaveEvent = exports.joinEvent = exports.createEvent = exports.getSingleEvent = exports.getAllEvents = void 0;
 const event_1 = __importDefault(require("../models/event"));
 const http_error_1 = __importDefault(require("../middleware/http-error"));
+const mongoose_1 = require("mongoose");
 // const HttpError = require("../middleware/http-error")
 const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -47,7 +48,7 @@ const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 exports.getSingleEvent = getSingleEvent;
 const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
-    const { name, location, description, startDate, endDate, ticketPrice, tagsArr } = req.body;
+    const { name, location, description, startDate, endDate, ticketPrice, tagsArr, } = req.body;
     try {
         const newEvent = new event_1.default({
             name,
@@ -56,9 +57,9 @@ const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             startDate,
             endDate,
             ticketPrice,
-            tags: tagsArr
+            tags: tagsArr,
         });
-        console.log(newEvent, 'newEvent');
+        console.log(newEvent, "newEvent");
         yield newEvent.save();
         res.status(201).json({ newEvent });
     }
@@ -113,7 +114,7 @@ const getUserEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     try {
         const foundUserEvents = yield event_1.default.find({
             attendees: { $elemMatch: { userId } },
-        }).sort('-startDate');
+        }).sort("-startDate");
         console.log(foundUserEvents);
         if (foundUserEvents.length < 0) {
             const error = new http_error_1.default("No events found for this user", 404);
@@ -129,3 +130,25 @@ const getUserEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.getUserEvents = getUserEvents;
+const deleteEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { eventId } = req.params;
+    console.log(eventId);
+    try {
+        if (!(0, mongoose_1.isValidObjectId)(eventId)) {
+            const error = new http_error_1.default("Invalid object ID", 400);
+            return next(error);
+        }
+        const foundEvent = yield event_1.default.findById(eventId);
+        if (!foundEvent) {
+            const error = new http_error_1.default("No events found to delete", 404);
+            return next(error);
+        }
+        const deletedEvent = yield event_1.default.findByIdAndDelete(eventId);
+        res.status(200).json({ deletedEvent });
+    }
+    catch (err) {
+        const error = new http_error_1.default("Error deleting event", 500);
+        return next(error);
+    }
+});
+exports.deleteEvent = deleteEvent;

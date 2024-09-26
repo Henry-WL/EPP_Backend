@@ -9,6 +9,7 @@ import {
   LeaveEvent,
   UserParams,
 } from "./types/eventTypes";
+import { isValidObjectId } from "mongoose";
 
 // const HttpError = require("../middleware/http-error")
 
@@ -56,7 +57,15 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
   next
 ) => {
   console.log(req.body);
-  const { name, location, description, startDate, endDate, ticketPrice, tagsArr } = req.body;
+  const {
+    name,
+    location,
+    description,
+    startDate,
+    endDate,
+    ticketPrice,
+    tagsArr,
+  } = req.body;
 
   try {
     const newEvent = new Event({
@@ -66,10 +75,10 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
       startDate,
       endDate,
       ticketPrice,
-      tags:tagsArr
+      tags: tagsArr,
     });
 
-    console.log(newEvent, 'newEvent')
+    console.log(newEvent, "newEvent");
 
     await newEvent.save();
 
@@ -150,7 +159,7 @@ export const getUserEvents: RequestHandler<UserParams> = async (
   try {
     const foundUserEvents = await Event.find({
       attendees: { $elemMatch: { userId } },
-    }).sort('-startDate');
+    }).sort("-startDate");
 
     console.log(foundUserEvents);
 
@@ -162,6 +171,34 @@ export const getUserEvents: RequestHandler<UserParams> = async (
     }
   } catch (err) {
     const error = new HttpError("Error getting user events", 500);
+    return next(error);
+  }
+};
+
+export const deleteEvent: RequestHandler<EventParams> = async (
+  req,
+  res,
+  next
+) => {
+  const { eventId } = req.params;
+  console.log(eventId);
+  try {
+    if (!isValidObjectId(eventId)) {
+      const error = new HttpError("Invalid object ID", 400);
+      return next(error);
+    }
+
+    const foundEvent = await Event.findById(eventId);
+
+    if (!foundEvent) {
+      const error = new HttpError("No events found to delete", 404);
+      return next(error);
+    }
+    const deletedEvent = await Event.findByIdAndDelete(eventId);
+
+    res.status(200).json({ deletedEvent });
+  } catch (err) {
+    const error = new HttpError("Error deleting event", 500);
     return next(error);
   }
 };

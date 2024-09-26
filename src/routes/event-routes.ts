@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createEvent,
+  deleteEvent,
   getAllEvents,
   getSingleEvent,
   getUserEvents,
@@ -21,5 +22,7 @@ router.post("/join/:eventId", joinEvent)
 router.post("/leave/:eventId", leaveEvent)
 
 router.get("/userEvents/:userId", getUserEvents)
+
+router.delete("/:eventId", deleteEvent)
 
 export default router;
