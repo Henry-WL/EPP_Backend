@@ -22,13 +22,16 @@ const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY, { apiVersion:
 const createPaymentIntent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('running create payment intent');
     try {
-        const { ticketPrice, currency = 'usd' } = req.body;
-        console.log(ticketPrice, currency, 'ticketttttttt');
+        const { ticketPrice, receipt_email } = req.body;
+        console.log(req.body, 'req body');
+        console.log(ticketPrice, receipt_email, 'ticket, receipt email');
+        // console.log(ticketPrice, currency, 'ticketttttttt')
         // Create a PaymentIntent with the specified amount
         const paymentIntent = yield stripe.paymentIntents.create({
             amount: ticketPrice * 100, // Stripe expects amount in cents
-            currency,
+            currency: 'gbp',
             payment_method_types: ['card'],
+            receipt_email: receipt_email
         });
         // Return the client secret to the frontend
         res.status(200).json({

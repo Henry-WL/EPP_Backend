@@ -9,7 +9,8 @@ export interface CreateEventBody {
   startDate: string;
   endDate: string;
   ticketPrice: number,
-  tags: string[]
+  payWant: boolean,
+  tagsArr: string[]
 //   tags: [{ type: String }],
 //   date: string;
 }

@@ -64,6 +64,7 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
     startDate,
     endDate,
     ticketPrice,
+    payWant,
     tagsArr,
   } = req.body;
 
@@ -75,6 +76,7 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
       startDate,
       endDate,
       ticketPrice,
+      payWant,
       tags: tagsArr,
     });
 

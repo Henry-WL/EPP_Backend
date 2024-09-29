@@ -11,13 +11,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion:
 export const createPaymentIntent = async (req: Request, res: Response): Promise<void> => {
     console.log('running create payment intent')
   try {
-    const { ticketPrice, currency = 'usd' } = req.body;
-    console.log(ticketPrice, currency, 'ticketttttttt')
+    const { ticketPrice, receipt_email } = req.body;
+    console.log(req.body, 'req body')
+    console.log(ticketPrice, receipt_email, 'ticket, receipt email')
+    // console.log(ticketPrice, currency, 'ticketttttttt')
     // Create a PaymentIntent with the specified amount
     const paymentIntent = await stripe.paymentIntents.create({
       amount: ticketPrice * 100, // Stripe expects amount in cents
-      currency,
+      currency: 'gbp',
       payment_method_types: ['card'],
+      receipt_email: receipt_email
     });
 
     // Return the client secret to the frontend

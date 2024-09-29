@@ -28,7 +28,7 @@ const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
              );
           }
       */
-    const { email, password } = req.body;
+    const { email, username, password } = req.body;
     let existingUser;
     try {
         existingUser = yield user_1.default.findOne({ email: email });
@@ -52,6 +52,7 @@ const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
     }
     const createdUser = new user_1.default({
         email: email,
+        username: username,
         password: hashedPass,
         isStaff: false
     });
@@ -77,7 +78,7 @@ const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.signup = signup;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
+    const { email, username, password } = req.body;
     let existingUser;
     try {
         existingUser = yield user_1.default.findOne({ email: email });
@@ -104,7 +105,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     }
     let token;
     try {
-        token = jsonwebtoken_1.default.sign({ userId: existingUser.id, email: existingUser.email }, process.env.JWT_KEY, { expiresIn: "1h" });
+        token = jsonwebtoken_1.default.sign({ userId: existingUser.id, email: existingUser.email, username: existingUser.username }, process.env.JWT_KEY, { expiresIn: "1h" });
     }
     catch (err) {
         const error = new http_error_1.default("Signing up failed, please try again", 500);

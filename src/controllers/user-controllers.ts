@@ -20,7 +20,7 @@ export const signup: RequestHandler = async (req, res, next) => {
         }
     */
 
-  const { email, password } = req.body as { email: string; password: string };
+  const { email, username, password } = req.body as { email: string; username: string; password: string };
 
   let existingUser;
 
@@ -48,6 +48,7 @@ export const signup: RequestHandler = async (req, res, next) => {
 
   const createdUser = new User({
     email: email,
+    username: username,
     password: hashedPass,
     isStaff: false
   });
@@ -78,7 +79,7 @@ export const signup: RequestHandler = async (req, res, next) => {
 };
 
 export const login: RequestHandler = async (req, res, next) => {
-  const { email, password } = req.body as { email: string; password: string };
+  const { email, username, password } = req.body as { email: string; username: string; password: string };
 
   let existingUser;
   try {
@@ -122,7 +123,7 @@ export const login: RequestHandler = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userId: existingUser.id, email: existingUser.email },
+      { userId: existingUser.id, email: existingUser.email, username: existingUser.username },
       process.env.JWT_KEY,
       { expiresIn: "1h" }
     );

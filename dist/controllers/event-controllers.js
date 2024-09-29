@@ -48,7 +48,7 @@ const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 exports.getSingleEvent = getSingleEvent;
 const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
-    const { name, location, description, startDate, endDate, ticketPrice, tagsArr, } = req.body;
+    const { name, location, description, startDate, endDate, ticketPrice, payWant, tagsArr, } = req.body;
     try {
         const newEvent = new event_1.default({
             name,
@@ -57,6 +57,7 @@ const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             startDate,
             endDate,
             ticketPrice,
+            payWant,
             tags: tagsArr,
         });
         console.log(newEvent, "newEvent");
