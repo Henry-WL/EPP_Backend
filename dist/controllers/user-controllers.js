@@ -143,6 +143,7 @@ const patchUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             const error = new http_error_1.default("User not found", 404);
             return next(error);
         }
+        // @ts-ignore
         res.status(200).json({ updatedUser });
     }
     catch (err) {

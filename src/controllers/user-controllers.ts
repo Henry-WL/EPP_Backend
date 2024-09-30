@@ -175,7 +175,7 @@ export const patchUser:RequestHandler<UserParams, PatchUser> = async (req, res, 
       return next(error);
     }
 
-
+    // @ts-ignore
     res.status(200).json({updatedUser})
     
   } catch(err) {
