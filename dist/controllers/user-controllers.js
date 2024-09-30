@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.signup = void 0;
+exports.patchUser = exports.getUser = exports.login = exports.signup = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const http_error_1 = __importDefault(require("../middleware/http-error"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -116,3 +116,51 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         .json({ userId: existingUser.id, email: existingUser.email, token: token, isStaff: existingUser.isStaff });
 });
 exports.login = login;
+const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    try {
+        const foundUser = yield user_1.default.findById(userId).select('-password');
+        res.status(200).json({ foundUser });
+    }
+    catch (err) {
+        const error = new http_error_1.default("No user found", 404);
+        return next(error);
+    }
+});
+exports.getUser = getUser;
+const patchUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    const { username, email, password } = req.body;
+    console.log(username, email, password, userId);
+    const updateData = {};
+    // Conditionally add fields to the update object
+    if (username)
+        updateData.username = username;
+    if (email)
+        updateData.email = email;
+    const saltRounds = 12;
+    let hashedPass;
+    if (password) {
+        try {
+            hashedPass = yield bcrypt_1.default.hash(password, saltRounds);
+            updateData.password = hashedPass;
+        }
+        catch (err) {
+            console.log(err, "error hashing pass");
+        }
+    }
+    try {
+        const updatedUser = yield user_1.default.findByIdAndUpdate(userId, { $set: updateData }, { new: true });
+        console.log(updatedUser);
+        if (!updatedUser) {
+            const error = new http_error_1.default("User not found", 404);
+            return next(error);
+        }
+        res.status(200).json({ updatedUser });
+    }
+    catch (err) {
+        const error = new http_error_1.default("Editing user failed, please try again later", 500);
+        return next(error);
+    }
+});
+exports.patchUser = patchUser;

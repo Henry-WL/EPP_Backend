@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 
 // const HttpError = require("../middleware/http-error")
 import mongoose from "mongoose";
+import { UserParams } from "./types/eventTypes";
+import { PatchUser } from "./types/userTypes";
 
 export const signup: RequestHandler = async (req, res, next) => {
   /*
@@ -136,3 +138,63 @@ export const login: RequestHandler = async (req, res, next) => {
     .status(201)
     .json({ userId: existingUser.id, email: existingUser.email, token: token, isStaff: existingUser.isStaff }); 
 };
+
+export const getUser:RequestHandler<UserParams> = async (req, res, next ) => {
+  const {userId} = req.params;
+  
+  try {
+    const foundUser = await User.findById(userId).select('-password')
+    res.status(200).json({foundUser})
+
+  } catch (err) {
+    const error = new HttpError("No user found", 404);
+    return next(error);
+  }
+}
+
+export const patchUser:RequestHandler<UserParams, PatchUser> = async (req, res, next) => {
+  const {userId} = req.params
+
+  const {username, email, password} = req.body
+
+  console.log(username, email, password, userId)
+
+  const updateData: Partial<{ username: string; email: string; password: string }> = {};
+
+  // Conditionally add fields to the update object
+  if (username) updateData.username = username;
+  if (email) updateData.email = email;
+
+  const saltRounds = 12;
+  let hashedPass;
+
+  if (password) {
+    try {
+      hashedPass = await bcrypt.hash(password, saltRounds);
+      updateData.password = hashedPass
+    } catch (err) {
+      console.log(err, "error hashing pass");
+    }
+  }
+
+ 
+
+  
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, {$set: updateData}, {new: true})
+
+    console.log(updatedUser)
+
+    if (!updatedUser) {
+      const error = new HttpError("User not found", 404);
+      return next(error);
+    }
+
+
+    res.status(200).json({updatedUser})
+  } catch(err) {
+    const error = new HttpError("Editing user failed, please try again later", 500);
+    return next(error);
+  }
+}
