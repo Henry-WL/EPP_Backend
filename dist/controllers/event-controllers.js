@@ -20,6 +20,7 @@ const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     const sort = req.query.sort || 'Newest'; // default to 'newest'
     try {
         const sortOption = sort === 'Oldest' ? { startDate: 1 } : { startDate: -1 };
+        console.log('first');
         const allEvents = yield event_1.default.find({}).sort(sortOption);
         res.status(200).json({ allEvents });
     }

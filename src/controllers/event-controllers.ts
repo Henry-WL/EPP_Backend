@@ -14,10 +14,10 @@ import { isValidObjectId } from "mongoose";
 
 export const getAllEvents: RequestHandler = async (req, res, next) => {
     const sort = req.query.sort || 'Newest'; // default to 'newest'
-
+  
   try {
     const sortOption: { [key: string]: 1 | -1 } = sort === 'Oldest' ? { startDate: 1 } : { startDate: -1 };
-
+    console.log('first')
     const allEvents: EventDocument[] = await Event.find({}).sort(sortOption);
     res.status(200).json({ allEvents });
   } catch (err) {
