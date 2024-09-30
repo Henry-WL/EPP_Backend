@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 // Initialize Stripe with your test secret key
 dotenv.config()
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2022-11-15' });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 // Controller to create a payment intent
 export const createPaymentIntent = async (req: Request, res: Response): Promise<void> => {

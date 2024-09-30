@@ -193,6 +193,7 @@ export const patchUser:RequestHandler<UserParams, PatchUser> = async (req, res, 
 
 
     res.status(200).json({updatedUser})
+    
   } catch(err) {
     const error = new HttpError("Editing user failed, please try again later", 500);
     return next(error);

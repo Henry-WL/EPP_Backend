@@ -1,6 +1,5 @@
 import express, {NextFunction, Request, Response} from 'express'
 import {json} from 'body-parser'
-import todoRoutes from './routes/todos'
 import userRoutes from './routes/user-routes';
 import eventRoutes from './routes/event-routes';
 import paymentRoutes from './routes/paymentRoutes'
@@ -8,6 +7,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import cors from 'cors'
 dotenv.config()
+
 
 const app = express()
 
@@ -17,7 +17,6 @@ app.use(json())
 // cors
 app.use(cors())
 
-app.use('/todos', todoRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/events', eventRoutes)
 

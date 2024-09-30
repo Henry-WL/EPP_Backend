@@ -17,7 +17,7 @@ const stripe_1 = __importDefault(require("stripe"));
 const dotenv_1 = __importDefault(require("dotenv"));
 // Initialize Stripe with your test secret key
 dotenv_1.default.config();
-const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY, { apiVersion: '2022-11-15' });
+const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
 // Controller to create a payment intent
 const createPaymentIntent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('running create payment intent');
