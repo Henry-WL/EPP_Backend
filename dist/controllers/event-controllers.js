@@ -18,8 +18,10 @@ const http_error_1 = __importDefault(require("../middleware/http-error"));
 const mongoose_1 = require("mongoose");
 // const HttpError = require("../middleware/http-error")
 const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const sort = req.query.sort || 'Newest'; // default to 'newest'
     try {
-        const allEvents = yield event_1.default.find({});
+        const sortOption = sort === 'Oldest' ? { startDate: 1 } : { startDate: -1 };
+        const allEvents = yield event_1.default.find({}).sort(sortOption);
         res.status(200).json({ allEvents });
     }
     catch (err) {
@@ -48,7 +50,7 @@ const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 exports.getSingleEvent = getSingleEvent;
 const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
-    const { name, location, description, startDate, endDate, ticketPrice, payWant, tagsArr, } = req.body;
+    const { name, location, description, startDate, endDate, ticketPrice, payWant, tagsArr, filmData } = req.body;
     try {
         const newEvent = new event_1.default({
             name,
@@ -59,6 +61,7 @@ const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             ticketPrice,
             payWant,
             tags: tagsArr,
+            filmData
         });
         console.log(newEvent, "newEvent");
         yield newEvent.save();

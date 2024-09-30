@@ -14,8 +14,12 @@ import { isValidObjectId } from "mongoose";
 // const HttpError = require("../middleware/http-error")
 
 export const getAllEvents: RequestHandler = async (req, res, next) => {
+    const sort = req.query.sort || 'Newest'; // default to 'newest'
+
   try {
-    const allEvents: EventDocument[] = await Event.find({});
+    const sortOption: { [key: string]: 1 | -1 } = sort === 'Oldest' ? { startDate: 1 } : { startDate: -1 };
+
+    const allEvents: EventDocument[] = await Event.find({}).sort(sortOption);
     res.status(200).json({ allEvents });
   } catch (err) {
     const error = new HttpError(
@@ -66,6 +70,7 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
     ticketPrice,
     payWant,
     tagsArr,
+    filmData
   } = req.body;
 
   try {
@@ -78,6 +83,7 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
       ticketPrice,
       payWant,
       tags: tagsArr,
+      filmData
     });
 
     console.log(newEvent, "newEvent");

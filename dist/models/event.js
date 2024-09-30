@@ -23,7 +23,8 @@ const eventSchema = new mongoose_1.Schema({
     startDate: { type: String },
     endDate: { type: String },
     ticketPrice: { type: Number, default: 0 },
-    payWant: { type: Boolean }
+    payWant: { type: Boolean },
+    filmData: { type: Object }
 });
 const Event = (0, mongoose_1.model)("Event", eventSchema);
 exports.default = Event;

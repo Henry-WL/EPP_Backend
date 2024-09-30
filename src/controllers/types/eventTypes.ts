@@ -10,7 +10,8 @@ export interface CreateEventBody {
   endDate: string;
   ticketPrice: number,
   payWant: boolean,
-  tagsArr: string[]
+  tagsArr: string[],
+  filmData: object
 //   tags: [{ type: String }],
 //   date: string;
 }
