@@ -11,7 +11,6 @@ import {
 } from "./types/eventTypes";
 import { isValidObjectId } from "mongoose";
 
-// const HttpError = require("../middleware/http-error")
 
 export const getAllEvents: RequestHandler = async (req, res, next) => {
     const sort = req.query.sort || 'Newest'; // default to 'newest'
@@ -60,7 +59,6 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
   res,
   next
 ) => {
-  console.log(req.body);
   const {
     name,
     location,
@@ -85,8 +83,6 @@ export const createEvent: RequestHandler<{}, {}, CreateEventBody> = async (
       tags: tagsArr,
       filmData
     });
-
-    console.log(newEvent, "newEvent");
 
     await newEvent.save();
 
@@ -135,8 +131,6 @@ export const leaveEvent: RequestHandler<EventParams, {}, LeaveEvent> = async (
   try {
     const foundEvent = await Event.findById(eventId);
 
-    console.log(foundEvent);
-
     if (!foundEvent) {
       const error = new HttpError("Event not found", 404);
       return next(error);
@@ -169,8 +163,6 @@ export const getUserEvents: RequestHandler<UserParams> = async (
       attendees: { $elemMatch: { userId } },
     }).sort("-startDate");
 
-    console.log(foundUserEvents);
-
     if (foundUserEvents.length < 0) {
       const error = new HttpError("No events found for this user", 404);
       return next(error);
@@ -189,7 +181,6 @@ export const deleteEvent: RequestHandler<EventParams> = async (
   next
 ) => {
   const { eventId } = req.params;
-  console.log(eventId);
   try {
     if (!isValidObjectId(eventId)) {
       const error = new HttpError("Invalid object ID", 400);

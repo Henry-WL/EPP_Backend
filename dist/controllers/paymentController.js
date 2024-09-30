@@ -15,17 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPaymentIntent = void 0;
 const stripe_1 = __importDefault(require("stripe"));
 const dotenv_1 = __importDefault(require("dotenv"));
-// Initialize Stripe with your test secret key
 dotenv_1.default.config();
 const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
 // Controller to create a payment intent
 const createPaymentIntent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('running create payment intent');
     try {
         const { ticketPrice, receipt_email } = req.body;
-        console.log(req.body, 'req body');
-        console.log(ticketPrice, receipt_email, 'ticket, receipt email');
-        // console.log(ticketPrice, currency, 'ticketttttttt')
         // Create a PaymentIntent with the specified amount
         const paymentIntent = yield stripe.paymentIntents.create({
             amount: ticketPrice * 100, // Stripe expects amount in cents

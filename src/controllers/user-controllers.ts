@@ -11,24 +11,12 @@ import { UserParams } from "./types/eventTypes";
 import { PatchUser } from "./types/userTypes";
 
 export const signup: RequestHandler = async (req, res, next) => {
-  /*
-         const errors = validationResult(req);
-
-         if (!errors.isEmpty()) {
-            console.log(errors);
-            return next(
-            new HttpError("Invalid inputs passed, please check your data.", 422)
-           );
-        }
-    */
-
   const { email, username, password } = req.body as { email: string; username: string; password: string };
 
   let existingUser;
 
   try {
     existingUser = await User.findOne({ email: email });
-    console.log(existingUser, "< existing user");
   } catch (err) {
     const error = new HttpError("Sign up failed", 500);
     return next(error);
@@ -157,8 +145,6 @@ export const patchUser:RequestHandler<UserParams, PatchUser> = async (req, res, 
 
   const {username, email, password} = req.body
 
-  console.log(username, email, password, userId)
-
   const updateData: Partial<{ username: string; email: string; password: string }> = {};
 
   // Conditionally add fields to the update object
@@ -183,8 +169,6 @@ export const patchUser:RequestHandler<UserParams, PatchUser> = async (req, res, 
 
   try {
     const updatedUser = await User.findByIdAndUpdate(userId, {$set: updateData}, {new: true})
-
-    console.log(updatedUser)
 
     if (!updatedUser) {
       const error = new HttpError("User not found", 404);

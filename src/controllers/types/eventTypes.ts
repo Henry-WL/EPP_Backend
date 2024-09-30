@@ -12,12 +12,9 @@ export interface CreateEventBody {
   payWant: boolean,
   tagsArr: string[],
   filmData: object
-//   tags: [{ type: String }],
-//   date: string;
 }
 
 export interface JoinEvent {
-    // const { userId, username } = req.body;
     userId: string;
     username: string
 }
@@ -29,10 +26,3 @@ export interface LeaveEvent {
 export interface UserParams {
     userId: string;
 }
-
-// export interface UpdateEventBody {
-//   name?: string; // Optional fields, since in update requests, all fields might not be provided
-//   location?: string;
-//   date?: string;
-// }
-

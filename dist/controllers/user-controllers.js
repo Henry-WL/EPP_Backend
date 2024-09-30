@@ -18,21 +18,10 @@ const http_error_1 = __importDefault(require("../middleware/http-error"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    /*
-           const errors = validationResult(req);
-  
-           if (!errors.isEmpty()) {
-              console.log(errors);
-              return next(
-              new HttpError("Invalid inputs passed, please check your data.", 422)
-             );
-          }
-      */
     const { email, username, password } = req.body;
     let existingUser;
     try {
         existingUser = yield user_1.default.findOne({ email: email });
-        console.log(existingUser, "< existing user");
     }
     catch (err) {
         const error = new http_error_1.default("Sign up failed", 500);
@@ -131,7 +120,6 @@ exports.getUser = getUser;
 const patchUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
     const { username, email, password } = req.body;
-    console.log(username, email, password, userId);
     const updateData = {};
     // Conditionally add fields to the update object
     if (username)
@@ -151,7 +139,6 @@ const patchUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     try {
         const updatedUser = yield user_1.default.findByIdAndUpdate(userId, { $set: updateData }, { new: true });
-        console.log(updatedUser);
         if (!updatedUser) {
             const error = new http_error_1.default("User not found", 404);
             return next(error);

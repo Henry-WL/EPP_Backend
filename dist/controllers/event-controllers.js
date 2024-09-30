@@ -16,7 +16,6 @@ exports.deleteEvent = exports.getUserEvents = exports.leaveEvent = exports.joinE
 const event_1 = __importDefault(require("../models/event"));
 const http_error_1 = __importDefault(require("../middleware/http-error"));
 const mongoose_1 = require("mongoose");
-// const HttpError = require("../middleware/http-error")
 const getAllEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const sort = req.query.sort || 'Newest'; // default to 'newest'
     try {
@@ -49,7 +48,6 @@ const getSingleEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.getSingleEvent = getSingleEvent;
 const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
     const { name, location, description, startDate, endDate, ticketPrice, payWant, tagsArr, filmData } = req.body;
     try {
         const newEvent = new event_1.default({
@@ -63,7 +61,6 @@ const createEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             tags: tagsArr,
             filmData
         });
-        console.log(newEvent, "newEvent");
         yield newEvent.save();
         res.status(201).json({ newEvent });
     }
@@ -97,7 +94,6 @@ const leaveEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     const { userId } = req.body;
     try {
         const foundEvent = yield event_1.default.findById(eventId);
-        console.log(foundEvent);
         if (!foundEvent) {
             const error = new http_error_1.default("Event not found", 404);
             return next(error);
@@ -119,7 +115,6 @@ const getUserEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const foundUserEvents = yield event_1.default.find({
             attendees: { $elemMatch: { userId } },
         }).sort("-startDate");
-        console.log(foundUserEvents);
         if (foundUserEvents.length < 0) {
             const error = new http_error_1.default("No events found for this user", 404);
             return next(error);
@@ -136,7 +131,6 @@ const getUserEvents = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 exports.getUserEvents = getUserEvents;
 const deleteEvent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { eventId } = req.params;
-    console.log(eventId);
     try {
         if (!(0, mongoose_1.isValidObjectId)(eventId)) {
             const error = new http_error_1.default("Invalid object ID", 400);
